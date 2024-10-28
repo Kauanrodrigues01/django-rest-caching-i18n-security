@@ -305,6 +305,14 @@
         "documentation": {}
     },
     {
+        "label": "PageNumberPagination",
+        "importPath": "rest_framework.pagination",
+        "description": "rest_framework.pagination",
+        "isExtraImport": true,
+        "detail": "rest_framework.pagination",
+        "documentation": {}
+    },
+    {
         "label": "method_decorator",
         "importPath": "django.utils.decorators",
         "description": "django.utils.decorators",
@@ -555,7 +563,7 @@
         "kind": 6,
         "importPath": "escola.serializer",
         "description": "escola.serializer",
-        "peekOfCode": "class AlunoSerializer(serializers.ModelSerializer):\n    class Meta:\n        model = Aluno\n        fields = ['id', 'nome', 'rg', 'cpf', 'data_nascimento', 'foto']\n    def validate(self, attrs):\n        nome = attrs.get('nome')\n        if nome == 'kauan':\n            raise serializers.ValidationError(_(\"Por favor, insira um número válido.\"))\n        return super().validate(attrs)\nclass CursoSerializer(serializers.ModelSerializer):",
+        "peekOfCode": "class AlunoSerializer(serializers.ModelSerializer):\n    class Meta:\n        model = Aluno\n        fields = ['id', 'nome', 'rg', 'cpf', 'data_nascimento', 'foto']\n    def validate(self, attrs):\n        nome = attrs.get('nome')\n        if nome == 'kauan':\n            raise serializers.ValidationError(_(\"Please enter a valid number.\"))\n        return super().validate(attrs)\nclass CursoSerializer(serializers.ModelSerializer):",
         "detail": "escola.serializer",
         "documentation": {}
     },
@@ -605,11 +613,20 @@
         "documentation": {}
     },
     {
+        "label": "AlunoPagination",
+        "kind": 6,
+        "importPath": "escola.views",
+        "description": "escola.views",
+        "peekOfCode": "class AlunoPagination(PageNumberPagination):\n    page_size = 10  # Número padrão de itens por página\n    page_size_query_param = 'page_size'  # Permite ao usuário definir o número de itens\n    max_page_size = 100  # Limite máximo de itens por página\nclass AlunosViewSet(viewsets.ModelViewSet):\n    \"\"\"Exibindo todos os alunos e alunas\"\"\"\n    queryset = Aluno.objects.all().order_by('-id')\n    pagination_class = (AlunoPagination)\n    def get_serializer_class(self):\n        if self.request.version == 'v2':",
+        "detail": "escola.views",
+        "documentation": {}
+    },
+    {
         "label": "AlunosViewSet",
         "kind": 6,
         "importPath": "escola.views",
         "description": "escola.views",
-        "peekOfCode": "class AlunosViewSet(viewsets.ModelViewSet):\n    \"\"\"Exibindo todos os alunos e alunas\"\"\"\n    queryset = Aluno.objects.all()\n    def get_serializer_class(self):\n        if self.request.version == 'v2':\n            return AlunoSerializerV2\n        else:\n            return AlunoSerializer\nclass CursosViewSet(viewsets.ModelViewSet):\n    \"\"\"Exibindo todos os cursos\"\"\"",
+        "peekOfCode": "class AlunosViewSet(viewsets.ModelViewSet):\n    \"\"\"Exibindo todos os alunos e alunas\"\"\"\n    queryset = Aluno.objects.all().order_by('-id')\n    pagination_class = (AlunoPagination)\n    def get_serializer_class(self):\n        if self.request.version == 'v2':\n            return AlunoSerializerV2\n        else:\n            return AlunoSerializer\n    @method_decorator(cache_page(30))",
         "detail": "escola.views",
         "documentation": {}
     },
@@ -627,7 +644,7 @@
         "kind": 6,
         "importPath": "escola.views",
         "description": "escola.views",
-        "peekOfCode": "class MatriculaViewSet(viewsets.ModelViewSet):\n    \"\"\"Listando todas as matrículas\"\"\"\n    queryset = Matricula.objects.all()\n    serializer_class = MatriculaSerializer\n    http_method_names = ['get', 'post', 'put', 'patch']\n    @method_decorator(cache_page(30))\n    def dispatch(self, request, *args, **kwargs):\n        return super(MatriculaViewSet, self).dispatch(request, *args, **kwargs)\nclass ListaMatriculasAluno(generics.ListAPIView):\n    \"\"\"Listando as matrículas de um aluno ou aluna\"\"\"",
+        "peekOfCode": "class MatriculaViewSet(viewsets.ModelViewSet):\n    \"\"\"Listando todas as matrículas\"\"\"\n    queryset = Matricula.objects.all()\n    serializer_class = MatriculaSerializer\n    http_method_names = ['get', 'post', 'put', 'patch']\n    @method_decorator(cache_page(30))\n    def list(self, request, *args, **kwargs):\n        return super().list(request, *args, **kwargs)\n    @method_decorator(cache_page(30))\n    def retrieve(self, request, *args, **kwargs):",
         "detail": "escola.views",
         "documentation": {}
     },
@@ -762,7 +779,16 @@
         "kind": 5,
         "importPath": "setup.settings",
         "description": "setup.settings",
-        "peekOfCode": "LANGUAGE_CODE = 'pt-br'\nTIME_ZONE = 'America/Sao_Paulo'\nUSE_I18N = True\nUSE_L10N = True\nUSE_TZ = True\n# Static files (CSS, JavaScript, Images)\n# https://docs.djangoproject.com/en/3.0/howto/static-files/\nSTATIC_URL = '/static/'\nREST_FRAMEWORK = {\n    'DEFAULT_VERSIONING_CLASS': 'rest_framework.versioning.QueryParameterVersioning',",
+        "peekOfCode": "LANGUAGE_CODE = 'en'\nLANGUAGES = [\n    ('en', 'English'),\n    ('pt-br', 'Portuguese'),\n]\nTIME_ZONE = 'America/Sao_Paulo'\nUSE_I18N = True\nUSE_L10N = True\nUSE_TZ = True\n# Static files (CSS, JavaScript, Images)",
+        "detail": "setup.settings",
+        "documentation": {}
+    },
+    {
+        "label": "LANGUAGES",
+        "kind": 5,
+        "importPath": "setup.settings",
+        "description": "setup.settings",
+        "peekOfCode": "LANGUAGES = [\n    ('en', 'English'),\n    ('pt-br', 'Portuguese'),\n]\nTIME_ZONE = 'America/Sao_Paulo'\nUSE_I18N = True\nUSE_L10N = True\nUSE_TZ = True\n# Static files (CSS, JavaScript, Images)\n# https://docs.djangoproject.com/en/3.0/howto/static-files/",
         "detail": "setup.settings",
         "documentation": {}
     },

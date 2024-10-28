@@ -3,17 +3,33 @@ from rest_framework import status
 from escola.models import Aluno, Curso, Matricula
 from escola.serializer import AlunoSerializer, AlunoSerializerV2, CursoSerializer, MatriculaSerializer, ListaMatriculasAlunoSerializer, ListaAlunosMatriculadosSerializer
 from rest_framework.response import Response
+from rest_framework.pagination import PageNumberPagination
 from django.utils.decorators import method_decorator
 from django.views.decorators.cache import cache_page
 
+class AlunoPagination(PageNumberPagination):
+    page_size = 10  # Número padrão de itens por página
+    page_size_query_param = 'page_size'  # Permite ao usuário definir o número de itens
+    max_page_size = 100  # Limite máximo de itens por página
+
 class AlunosViewSet(viewsets.ModelViewSet):
     """Exibindo todos os alunos e alunas"""
-    queryset = Aluno.objects.all()
+    queryset = Aluno.objects.all().order_by('-id')
+    pagination_class = (AlunoPagination)
+    
     def get_serializer_class(self):
         if self.request.version == 'v2':
             return AlunoSerializerV2
         else:
             return AlunoSerializer
+    
+    @method_decorator(cache_page(30))
+    def list(self, request, *args, **kwargs):
+        return super().list(request, *args, **kwargs)
+
+    @method_decorator(cache_page(30))
+    def retrieve(self, request, *args, **kwargs):
+        return super().retrieve(request, *args, **kwargs)
 
 class CursosViewSet(viewsets.ModelViewSet):
     """Exibindo todos os cursos"""
@@ -36,8 +52,12 @@ class MatriculaViewSet(viewsets.ModelViewSet):
     http_method_names = ['get', 'post', 'put', 'patch']
     
     @method_decorator(cache_page(30))
-    def dispatch(self, request, *args, **kwargs):
-        return super(MatriculaViewSet, self).dispatch(request, *args, **kwargs)
+    def list(self, request, *args, **kwargs):
+        return super().list(request, *args, **kwargs)
+
+    @method_decorator(cache_page(30))
+    def retrieve(self, request, *args, **kwargs):
+        return super().retrieve(request, *args, **kwargs)
 
 class ListaMatriculasAluno(generics.ListAPIView):
     """Listando as matrículas de um aluno ou aluna"""

@@ -10,7 +10,7 @@ class AlunoSerializer(serializers.ModelSerializer):
     def validate(self, attrs):
         nome = attrs.get('nome')
         if nome == 'kauan':
-            raise serializers.ValidationError(_("Por favor, insira um número válido."))
+            raise serializers.ValidationError(_("Please enter a valid number."))
         return super().validate(attrs)
 
 class CursoSerializer(serializers.ModelSerializer):
