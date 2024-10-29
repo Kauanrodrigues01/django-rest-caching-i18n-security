@@ -1,11 +1,14 @@
 from rest_framework import viewsets, generics
 from rest_framework import status
+from django.http import HttpResponse
+from django.http import JsonResponse
 from escola.models import Aluno, Curso, Matricula
 from escola.serializer import AlunoSerializer, AlunoSerializerV2, CursoSerializer, MatriculaSerializer, ListaMatriculasAlunoSerializer, ListaAlunosMatriculadosSerializer
 from rest_framework.response import Response
 from rest_framework.pagination import PageNumberPagination
 from django.utils.decorators import method_decorator
 from django.views.decorators.cache import cache_page
+from django_ratelimit.decorators import ratelimit
 
 class AlunoPagination(PageNumberPagination):
     page_size = 10  # Número padrão de itens por página
@@ -25,11 +28,16 @@ class AlunosViewSet(viewsets.ModelViewSet):
     
     @method_decorator(cache_page(30))
     def list(self, request, *args, **kwargs):
+        # Lógica da view aqui
         return super().list(request, *args, **kwargs)
 
     @method_decorator(cache_page(30))
     def retrieve(self, request, *args, **kwargs):
         return super().retrieve(request, *args, **kwargs)
+    
+    @method_decorator(ratelimit(key='ip', rate='5/m', block=True))
+    def create(self, request, *args, **kwargs):
+        return super().create(request, *args, **kwargs)
 
 class CursosViewSet(viewsets.ModelViewSet):
     """Exibindo todos os cursos"""

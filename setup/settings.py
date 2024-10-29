@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'escola',
     'corsheaders',
+    'django_ratelimit',
 ]
 
 MIDDLEWARE = [
@@ -51,7 +52,8 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     # I18N - Internacionalização
-    'django.middleware.locale.LocaleMiddleware'
+    'django.middleware.locale.LocaleMiddleware',
+    'escola.middlewares.CustomRatelimitMiddleware'
 ]
 
 ROOT_URLCONF = 'setup.urls'
@@ -164,7 +166,8 @@ CACHES = {
             'CONNECTION_POOL_KWARGS': {
                 'max_connections': 100  # Ajuste conforme necessário
             }
-        }
+        },
+        'TIMEOUT': 60 * 5,  # 5 minutos (300 segundos)
     }
 }
 

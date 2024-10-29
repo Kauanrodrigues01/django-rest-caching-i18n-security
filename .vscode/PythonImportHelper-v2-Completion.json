@@ -193,6 +193,30 @@
         "documentation": {}
     },
     {
+        "label": "JsonResponse",
+        "importPath": "django.http",
+        "description": "django.http",
+        "isExtraImport": true,
+        "detail": "django.http",
+        "documentation": {}
+    },
+    {
+        "label": "HttpResponse",
+        "importPath": "django.http",
+        "description": "django.http",
+        "isExtraImport": true,
+        "detail": "django.http",
+        "documentation": {}
+    },
+    {
+        "label": "JsonResponse",
+        "importPath": "django.http",
+        "description": "django.http",
+        "isExtraImport": true,
+        "detail": "django.http",
+        "documentation": {}
+    },
+    {
         "label": "serializers",
         "importPath": "rest_framework",
         "description": "rest_framework",
@@ -326,6 +350,14 @@
         "description": "django.views.decorators.cache",
         "isExtraImport": true,
         "detail": "django.views.decorators.cache",
+        "documentation": {}
+    },
+    {
+        "label": "ratelimit",
+        "importPath": "django_ratelimit.decorators",
+        "description": "django_ratelimit.decorators",
+        "isExtraImport": true,
+        "detail": "django_ratelimit.decorators",
         "documentation": {}
     },
     {
@@ -529,6 +561,15 @@
         "description": "escola.apps",
         "peekOfCode": "class EscolaConfig(AppConfig):\n    name = 'escola'",
         "detail": "escola.apps",
+        "documentation": {}
+    },
+    {
+        "label": "CustomRatelimitMiddleware",
+        "kind": 6,
+        "importPath": "escola.middlewares",
+        "description": "escola.middlewares",
+        "peekOfCode": "class CustomRatelimitMiddleware:\n    def __init__(self, get_response):\n        self.get_response = get_response\n    def __call__(self, request):\n        response = self.get_response(request)\n        # Verifica se a resposta é 403 e modifica a mensagem\n        if response.status_code == 403:\n            return JsonResponse(\n                {'detail': 'Você foi bloqueado devido ao limite de requisições.'},\n                status=429  # Você pode mudar para 429 se preferir",
+        "detail": "escola.middlewares",
         "documentation": {}
     },
     {
@@ -878,7 +919,7 @@
         "kind": 5,
         "importPath": "setup.settings",
         "description": "setup.settings",
-        "peekOfCode": "CACHES = {\n    'default': {\n        'BACKEND': 'django_redis.cache.RedisCache',\n        'LOCATION': 'redis://127.0.0.1:6379/1',  # Endereço do Redis\n        'OPTIONS': {\n            'CLIENT_CLASS': 'django_redis.client.DefaultClient',\n            'CONNECTION_POOL_KWARGS': {\n                'max_connections': 100  # Ajuste conforme necessário\n            }\n        }",
+        "peekOfCode": "CACHES = {\n    'default': {\n        'BACKEND': 'django_redis.cache.RedisCache',\n        'LOCATION': 'redis://127.0.0.1:6379/1',  # Endereço do Redis\n        'OPTIONS': {\n            'CLIENT_CLASS': 'django_redis.client.DefaultClient',\n            'CONNECTION_POOL_KWARGS': {\n                'max_connections': 100  # Ajuste conforme necessário\n            }\n        },",
         "detail": "setup.settings",
         "documentation": {}
     },
@@ -914,7 +955,7 @@
         "kind": 5,
         "importPath": "setup.urls",
         "description": "setup.urls",
-        "peekOfCode": "router = routers.DefaultRouter()\nrouter.register('alunos', AlunosViewSet, basename='Alunos')\nrouter.register('cursos', CursosViewSet, basename='Cursos')\nrouter.register('matriculas', MatriculaViewSet, basename='Matriculas')\nurlpatterns = [\n    path('admin/', admin.site.urls),\n    path('', include(router.urls) ),\n    path('alunos/<int:pk>/matriculas/', ListaMatriculasAluno.as_view()),\n    path('cursos/<int:pk>/matriculas/', ListaAlunosMatriculados.as_view())\n] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)",
+        "peekOfCode": "router = routers.DefaultRouter()\nrouter.register('alunos', AlunosViewSet, basename='Alunos')\nrouter.register('cursos', CursosViewSet, basename='Cursos')\nrouter.register('matriculas', MatriculaViewSet, basename='Matriculas')\nurlpatterns = [\n    path('controle-geral/', admin.site.urls),\n    path('', include(router.urls) ),\n    path('alunos/<int:pk>/matriculas/', ListaMatriculasAluno.as_view()),\n    path('cursos/<int:pk>/matriculas/', ListaAlunosMatriculados.as_view())\n] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)",
         "detail": "setup.urls",
         "documentation": {}
     },
@@ -923,7 +964,7 @@
         "kind": 5,
         "importPath": "setup.urls",
         "description": "setup.urls",
-        "peekOfCode": "urlpatterns = [\n    path('admin/', admin.site.urls),\n    path('', include(router.urls) ),\n    path('alunos/<int:pk>/matriculas/', ListaMatriculasAluno.as_view()),\n    path('cursos/<int:pk>/matriculas/', ListaAlunosMatriculados.as_view())\n] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)",
+        "peekOfCode": "urlpatterns = [\n    path('controle-geral/', admin.site.urls),\n    path('', include(router.urls) ),\n    path('alunos/<int:pk>/matriculas/', ListaMatriculasAluno.as_view()),\n    path('cursos/<int:pk>/matriculas/', ListaAlunosMatriculados.as_view())\n] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)",
         "detail": "setup.urls",
         "documentation": {}
     },
